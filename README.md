@@ -43,6 +43,9 @@ project or lock location, set `BLENDER_PURIFIER_PROJECT` and
 `BLENDER_PURIFIER_LOCK`, or pass `--project` and `--lock` before the adapter
 subcommand. Native arguments and working directories are preserved.
 
+Dependency preparation reads the selection and lock without copying the working
+tree into Nix. Project files enter the store only for an explicit Nix build.
+
 ## Scope
 
 The initial integration supports native add-on extensions from public HTTPS

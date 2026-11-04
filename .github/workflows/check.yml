@@ -24,6 +24,7 @@ jobs:
       - run: nix flake check -L
       - run: nix build .# --out-link result-cli
       - run: nix build .#blender --out-link result-blender
+      - run: python3 tests/dependency-environment.py result-cli
       - run: python3 tests/native.py result-cli result-blender
       - run: python3 tests/artifacts.py result-cli result-blender
       - run: python3 tests/wheels.py result-blender
