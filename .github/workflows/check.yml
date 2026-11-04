@@ -1,0 +1,37 @@
+name: check
+on:
+  push:
+    branches: [main]
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  check:
+    strategy:
+      fail-fast: false
+      matrix:
+        runner: [ubuntu-latest, ubuntu-24.04-arm]
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+      - uses: cachix/install-nix-action@v31
+      - name: Evaluate without import from derivation
+        run: >-
+          nix eval --json --option allow-import-from-derivation false
+          .#checks --apply
+          'all: builtins.mapAttrs (_: checks: builtins.mapAttrs (_: drv: drv.drvPath) checks) all'
+      - run: nix flake check -L
+      - run: nix build .# --out-link result-cli
+      - run: nix build .#blender --out-link result-blender
+      - run: python3 tests/native.py result-cli result-blender
+      - run: python3 tests/artifacts.py result-cli result-blender
+      - run: python3 tests/wheels.py result-blender
+      - run: python3 tests/capture.py result-cli
+      - name: Rebuild native extensions, geometry and release
+        run: |
+          purifier_system=$(nix eval --impure --raw --expr builtins.currentSystem)
+          nix build --rebuild --no-link \
+            ".#checks.$purifier_system.environment" \
+            ".#checks.$purifier_system.project" \
+            ".#checks.$purifier_system.release"
