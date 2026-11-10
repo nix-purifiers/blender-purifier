@@ -1,0 +1,47 @@
+{
+  "entries": [
+    {
+      "blender": {
+        "manifest": {
+          "blender_version_min": "4.2.0",
+          "copyright": [
+            "2024 Aaron Keith"
+          ],
+          "id": "boltfactory",
+          "license": [
+            "SPDX:GPL-3.0-or-later"
+          ],
+          "maintainer": "Community",
+          "name": "BoltFactory",
+          "schema_version": "1.0.0",
+          "tagline": "Add a bolt or nut",
+          "tags": [
+            "Add Mesh"
+          ],
+          "type": "add-on",
+          "version": "0.7.1",
+          "website": "https://projects.blender.org/extensions/add_mesh_BoltFactory"
+        },
+        "repository": "community"
+      },
+      "hash": "sha256-t19vlGtcKfeiEic32okZF82chi6Fs32u+CxmKjSCI7M=",
+      "mirrors": [],
+      "path": "community/boltfactory.zip",
+      "url": "https://extensions.blender.org/download/sha256:b75f6f946b5c29f7a2122737da891917cd9c862e85b37daef82c662a348223b3/add-on-boltfactory-v0.7.1.zip"
+    }
+  ],
+  "purifier": "blender",
+  "sdk": "3a86a732c71f1482cf3100889ff6e9cd0cceae34c97998a81702c993db785af2",
+  "selection": {
+    "repositories": [
+      {
+        "extensions": [
+          "boltfactory"
+        ],
+        "id": "community",
+        "url": "https://extensions.blender.org/api/v1/extensions/"
+      }
+    ]
+  },
+  "version": 1
+}

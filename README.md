@@ -80,3 +80,35 @@ GitHub release.
 
 The purifier idea was inspired by nixcloud's
 [cargo (libnix)](https://github.com/nixcloud/cargo).
+
+## Public output resources
+
+Select generated project output files explicitly:
+
+```nix
+project = pkgs.blender-purifier.buildBlenderProject {
+  src = ./.;
+  resourceRoots."public/file" = "generated-file";
+};
+```
+
+`project.projections.resources` exposes the selected file directory and its
+catalog; `project.projections.web.documentRoot` is the HTTP serving root,
+and `project.projections.java-resources.classPath` is the resource JAR.
+The same projections are attached to `project.packages.project`.
+`resourceDependencies` accepts additional typed resource views. Empty
+`resourceRoots` preserves existing output behavior.
+
+Paths are relative to the native project output. Selection copies actual
+export bytes. Unselected siblings stay outside the exported tree, and proof
+metadata stays outside HTTP and JAR payloads. A selected directory includes
+its contents, so select only
+public generated files or directories. Missing files, traversal, and resource
+collisions fail.
+
+Checks run two genuine native producer inputs, compare every selected byte
+with native files, serve them over HTTP, and load the JAR through an isolated
+Java class loader with exact origin and hash checks. They exclude a real
+private sibling and reject a genuine changed producer's JAR against the
+original byte contract. Native producers, resource views, and consumers are
+rebuilt directly.

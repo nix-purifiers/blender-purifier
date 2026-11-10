@@ -1,0 +1,10 @@
+{
+  "name": "blender",
+  "builder": "Blender",
+  "roots": {
+    "answer.txt": "answer.txt",
+    "bolt.obj": "bolt.obj",
+    "bolt.mtl": "bolt.mtl"
+  },
+  "changedFile": "build.py"
+}

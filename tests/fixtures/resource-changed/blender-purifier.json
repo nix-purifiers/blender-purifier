@@ -1,0 +1,9 @@
+{
+  "repositories": [
+    {
+      "id": "community",
+      "url": "https://extensions.blender.org/api/v1/extensions/",
+      "extensions": ["boltfactory"]
+    }
+  ]
+}
