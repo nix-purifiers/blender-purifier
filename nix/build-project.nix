@@ -1,6 +1,8 @@
 {
   lib,
+  purifier,
   runCommand,
+  python3,
   original,
   scripts,
   environment,
@@ -15,6 +17,8 @@
   fetchers ? { },
   doCheck ? false,
   checkCommand ? "",
+  resourceRoots ? { },
+  resourceDependencies ? [ ],
 }:
 let
   lock = readLock { inherit src lockFile; };
@@ -30,7 +34,7 @@ let
         "result"
       ]);
   };
-  project = runCommand "blender-project" { } ''
+  builtProject = runCommand "blender-project" { } ''
     export BLENDER_SYSTEM_RESOURCES=${scripts}
     export HOME="$TMPDIR/home" XDG_CACHE_HOME="$TMPDIR/cache" BLENDER_USER_RESOURCES="$TMPDIR/user"
     export BLENDER_PURIFIER_ENVIRONMENT=${profile} BLENDER_PURIFIER_OUTPUT="$out"
@@ -42,6 +46,17 @@ let
       --python ${../native/startup.py} --python ${lib.escapeShellArg script}
     ${lib.optionalString doCheck checkCommand}
   '';
+  projections = lib.optionalAttrs (resourceRoots != { }) (
+    purifier.resourceProjections {
+      producer = builtProject;
+      roots = resourceRoots;
+      dependencies = resourceDependencies;
+      inherit runCommand python3;
+    }
+  );
+  project = builtProject // {
+    inherit projections;
+  };
   release =
     runCommand "blender-project-release"
       {
@@ -62,6 +77,6 @@ in
     environment = profile;
   };
   tests = project;
-  inherit release;
+  inherit release projections;
   fetches = lock.entries;
 }
